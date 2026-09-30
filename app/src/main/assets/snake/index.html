@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Bully Snake</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 2D Canvas Container -->
+    <div id="game-canvas-wrapper">
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <!-- ==============================================================
+         SPLASH SCREEN 1: DEVELOPER BRANDING "Aon"
+         ============================================================== -->
+    <div class="app-screen splash-screen" id="splash-aon">
+        <div class="splash-content">
+            <div class="splash-subtitle">DEVELOPER STUDIO</div>
+            <div class="splash-logo-aon">Aon</div>
+            <div class="splash-subtitle">PRESENTS</div>
+        </div>
+        <div class="splash-skip-hint">TAP TO SKIP</div>
+    </div>
+
+    <!-- ==============================================================
+         SPLASH SCREEN 2: GAME TITLE "BULLY SNAKE"
+         ============================================================== -->
+    <div class="app-screen splash-screen hidden" id="splash-bully">
+        <div class="splash-content">
+            <div class="splash-logo-bully">BULLY<br>SNAKE</div>
+            <div class="splash-tagline">UNLIMITED NEON ARCADE</div>
+        </div>
+        <div class="splash-skip-hint">TAP TO PLAY</div>
+    </div>
+
+    <!-- ==============================================================
+         MAIN MENU SCREEN
+         ============================================================== -->
+    <div class="app-screen menu-screen hidden" id="menu-screen">
+        <header class="top-bar-hud">
+            <div class="currency-badge">
+                <span class="currency-icon">💎</span>
+                <span id="menu-diamonds-val">0</span>
+            </div>
+            <button class="icon-btn" id="btn-open-settings" aria-label="Settings">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </button>
+        </header>
+
+        <div class="menu-hero">
+            <h1 class="menu-title-glow">BULLY<br>SNAKE</h1>
+            <p class="menu-tagline">Unlimited Rounds & Skins</p>
+            <div class="menu-high-score">
+                <span>🏆 BEST SCORE:</span>
+                <span id="menu-high-score-val">0</span>
+            </div>
+        </div>
+
+        <nav class="menu-options">
+            <button class="menu-btn menu-btn-play" id="btn-play-game">
+                <svg style="width:22px;height:22px;fill:currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                PLAY GAME
+            </button>
+            <button class="menu-btn menu-btn-shop" id="btn-open-shop">
+                <span style="font-size:20px;">🐍</span>
+                SNAKES SHOP
+            </button>
+            <button class="menu-btn menu-btn-settings" id="btn-menu-settings">
+                <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                SETTINGS
+            </button>
+        </nav>
+    </div>
+
+    <!-- ==============================================================
+         GAMEPLAY HUD & TOUCH CONTROLS
+         ============================================================== -->
+    <div class="app-screen gameplay-screen hidden" id="gameplay-screen">
+        <header class="gameplay-hud-top">
+            <div class="hud-panel">
+                <span class="hud-panel-title">SCORE</span>
+                <span class="hud-panel-value" id="game-score-val">0</span>
+            </div>
+
+            <div class="hud-center-pill">
+                <div class="round-badge">ROUND <span id="game-round-val">1</span></div>
+                <div class="theme-name-tag" id="game-theme-name">Cyber Neon</div>
+            </div>
+
+            <div class="hud-actions-group">
+                <div class="currency-badge" style="padding: 4px 10px; font-size: 13px;">
+                    <span>💎</span>
+                    <span id="game-diamonds-val">0</span>
+                </div>
+                <button class="icon-btn" id="btn-game-pause" style="width: 38px; height: 38px;" aria-label="Pause">
+                    <svg viewBox="0 0 24 24" style="width:18px;height:18px;">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <footer class="gameplay-controls-area">
+            <!-- Virtual Joystick Zone -->
+            <div class="joystick-zone" id="joystick-zone">
+                <div class="joystick-knob" id="joystick-knob"></div>
+            </div>
+
+            <!-- Controller Mode Switcher -->
+            <div class="control-toggle-pill">
+                <button class="ctrl-btn active" data-mode="joystick">Stick</button>
+                <button class="ctrl-btn" data-mode="dpad">D-Pad</button>
+                <button class="ctrl-btn" data-mode="both">Both</button>
+            </div>
+
+            <!-- D-Pad Container -->
+            <div class="dpad-container" id="dpad-container" style="display: none;">
+                <button class="dpad-btn dpad-up" data-dir="up" aria-label="Up">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+                </button>
+                <button class="dpad-btn dpad-left" data-dir="left" aria-label="Left">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                </button>
+                <div class="dpad-center"></div>
+                <button class="dpad-btn dpad-right" data-dir="right" aria-label="Right">
+                    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                </button>
+                <button class="dpad-btn dpad-down" data-dir="down" aria-label="Down">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==============================================================
+         SNAKES SHOP SCREEN (10 UNIQUE SKINS)
+         ============================================================== -->
+    <div class="app-screen shop-screen hidden" id="shop-screen">
+        <header class="shop-header">
+            <button class="icon-btn" id="btn-shop-back" aria-label="Back">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </button>
+            <h2 class="shop-title">SNAKES SHOP</h2>
+            <div class="currency-badge">
+                <span>💎</span>
+                <span id="shop-diamonds-val">0</span>
+            </div>
+        </header>
+
+        <!-- 10 Skins Grid -->
+        <div class="shop-grid-container" id="shop-grid-container">
+            <!-- Populated dynamically by game.js -->
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         SETTINGS MODAL
+         ============================================================== -->
+    <div class="modal-overlay hidden" id="settings-modal">
+        <div class="modal-box">
+            <h2 class="modal-title">SETTINGS</h2>
+
+            <div class="setting-row">
+                <div class="setting-info">
+                    <span class="setting-name">Music (BGM)</span>
+                    <span class="setting-desc">Cyber synth soundtrack</span>
+                </div>
+                <div class="slider-container">
+                    <input type="range" min="0" max="1" step="0.05" class="volume-slider" id="slider-bgm">
+                    <button class="ctrl-btn" id="btn-toggle-bgm" style="padding: 4px 8px; font-size: 10px;">ACTIVE</button>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div class="setting-info">
+                    <span class="setting-name">Sound FX (SFX)</span>
+                    <span class="setting-desc">Bites, diamonds & crash</span>
+                </div>
+                <div class="slider-container">
+                    <input type="range" min="0" max="1" step="0.05" class="volume-slider" id="slider-sfx">
+                    <button class="ctrl-btn" id="btn-toggle-sfx" style="padding: 4px 8px; font-size: 10px;">ACTIVE</button>
+                </div>
+            </div>
+
+            <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="setting-name">Mechanics & Features</span>
+                <span class="setting-desc">• Screen Wrap Tunnel: Teleport from edge to edge!</span>
+                <span class="setting-desc">• Unlimited Rounds: Dynamic themes & tree/rock hazards</span>
+                <span class="setting-desc">• Guaranteed Diamond every 20 score points</span>
+            </div>
+
+            <button class="primary-btn" id="btn-close-settings">DONE</button>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         PAUSE MODAL
+         ============================================================== -->
+    <div class="modal-overlay hidden" id="pause-modal">
+        <div class="modal-box">
+            <h2 class="modal-title">GAME PAUSED</h2>
+            <p style="font-size: 13px; color: #94a3b8;">Take a break! Your cyber snake is holding position.</p>
+
+            <button class="primary-btn" id="btn-resume-game">
+                <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                RESUME
+            </button>
+            <button class="secondary-btn" id="btn-quit-game">QUIT TO MENU</button>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         GAME OVER MODAL
+         ============================================================== -->
+    <div class="modal-overlay hidden" id="game-over-modal">
+        <div class="modal-box">
+            <h2 class="modal-title" style="color: #f43f5e;">GAME OVER</h2>
+            <div id="gameover-new-record" style="display:none; color: #facc15; font-size:12px; font-weight:900; letter-spacing:1.5px;">
+                ★ NEW HIGH SCORE RECORD! ★
+            </div>
+
+            <div class="gameover-stats-grid">
+                <div class="stat-card">
+                    <span class="stat-title">SCORE</span>
+                    <span class="stat-num" id="final-score-val">0</span>
+                </div>
+                <div class="stat-card gold">
+                    <span class="stat-title">HIGH SCORE</span>
+                    <span class="stat-num" id="final-high-score-val">0</span>
+                </div>
+                <div class="stat-card diamond">
+                    <span class="stat-title">DIAMONDS</span>
+                    <span class="stat-num" id="final-diamonds-val">+0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">ROUND REACHED</span>
+                    <span class="stat-num" id="final-round-val">Round 1</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="primary-btn" id="btn-gameover-retry">
+                    <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                    </svg>
+                    RETRY
+                </button>
+                <button class="secondary-btn" id="btn-gameover-menu">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

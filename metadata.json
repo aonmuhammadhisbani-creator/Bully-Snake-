@@ -1,0 +1,6 @@
+{
+  "name": "Bully Snake",
+  "description": "Full-featured immersive glowing neon snake game with splash screens, unlimited round system, screen wrap, shop with 10 skins, obstacles, and diamond currency.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
